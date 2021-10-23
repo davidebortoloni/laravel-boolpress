@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Post;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -15,7 +17,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::orderBy('id', 'desc')->paginate(10);
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -26,7 +28,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        $post = new Post();
+        return view('admin.posts.create', compact('post'));
     }
 
     /**
@@ -37,7 +40,15 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|unique:posts|min:3',
+            'content' => 'required|string|min:10',
+            'image' => 'nullable',
+        ]);
+        $data = $request->all();
+        $data['slug'] = Str::slug($data['title'], '-');
+        $post = Post::create($data);
+        return view('admin.posts.show', compact('post'));
     }
 
     /**
@@ -57,9 +68,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        //
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -69,9 +80,17 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $request->validate([
+            'title' => ['required', 'string', Rule::unique('posts')->ignore($post->id), 'min:3'],
+            'content' => 'required|string|min:10',
+            'image' => 'nullable',
+        ]);
+        $data = $request->all();
+        $data['slug'] = Str::slug($data['title'], '-');
+        $post->update($data);
+        return view('admin.posts.show', compact('post'));
     }
 
     /**
@@ -80,8 +99,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('admin.posts.index')->with('alert-message', 'Post successfully deleted')->with('alert-type', 'success');
     }
 }
