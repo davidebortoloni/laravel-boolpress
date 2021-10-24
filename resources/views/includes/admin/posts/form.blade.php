@@ -8,35 +8,57 @@
             <div class="row">
                 <div class="col-6">
                     <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title', $post->title) }}">
-                    @error('title')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @else
-                        <div id="title-help" class="form-text">Enter the title of the post</div>
-                    @enderror
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title', $post->title) }}">
+                        @error('title')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @else
+                            <div id="title-help" class="form-text">Enter the title of the post</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="mb-3">
-                    <label for="image" class="form-label">Image</label>
-                    <input type="text" class="form-control @error('image') is-invalid @enderror" id="image" name="image" value="{{ old('image', $post->image) }}">
-                    @error('image')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @else
-                        <div id="image-help" class="form-text">Enter the image URL of the post</div>
-                    @enderror
+                        <label for="category_id">Category</label>
+                        <select id="category_id" name="category_id" class="form-control">
+                            <option value="">No category</option>
+                            @foreach ($categories as $category)
+                                <option
+                                @if (old('category_id', $post->category_id) == $category->id)
+                                    selected
+                                @endif
+                                value="{{ $category->id }}">
+                                {{ $category->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                        @error('title')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @else
+                            <div id="title-help" class="form-text">Enter the category of the post</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-12">
                     <div class="mb-3">
-                    <label for="content" class="form-label">Content</label>
-                    <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="8">{{ old('content', $post->content) }}</textarea>
-                    @error('content')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @else
-                        <div id="content-help" class="form-text">Enter the content of the post</div>
-                    @enderror
+                        <label for="image" class="form-label">Image</label>
+                        <input type="text" class="form-control @error('image') is-invalid @enderror" id="image" name="image" value="{{ old('image', $post->image) }}">
+                        @error('image')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @else
+                            <div id="image-help" class="form-text">Enter the image URL of the post</div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Content</label>
+                        <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="8">{{ old('content', $post->content) }}</textarea>
+                        @error('content')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @else
+                            <div id="content-help" class="form-text">Enter the content of the post</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="col 12 mt-2">

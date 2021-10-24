@@ -17,6 +17,7 @@
             <thead>
               <tr>
                 <th scope="col">Title</th>
+                <th scope="col">Category</th>
                 <th scope="col">Written on</th>
                 <th scope="col"></th>
               </tr>
@@ -25,6 +26,13 @@
                 @forelse ($posts as $post)
                 <tr>
                   <td>{{ $post->title }}</td>
+                  <td>
+                    @if ($post->category)
+                      {{ $post->category['name'] }}
+                    @else
+                      ----
+                    @endif
+                  </td>
                   <td>{{ $post->getFormattedDate('created_at','d-m-Y') }}</td>
                   <td class="d-flex justify-content-end">
                     <a href="{{ route('admin.posts.show', $post->id) }}" class="btn btn-primary mx-1">Details</a>
@@ -34,7 +42,7 @@
                       @method('DELETE')
                       <input type="submit" value="Delete" class="btn btn-danger">
                     </form>
-                </td>
+                  </td>
                 </tr>
                 @empty
                 <tr>

@@ -10,6 +10,11 @@
             </div>
             <div class="col-6">
                 <h1>{{ $post->title }}</h1>
+                @if ($post->category)
+                    <h4>{{ $post->category['name'] }}</h4>
+                @else
+                    <h4>No category</h4>
+                @endif
                 <p>{{ $post->content }}</p>
                 <address>{{ $post->getFormattedDate('created_at','d-m-Y') }}</address>
                 <div class="d-flex justify-content-end">
